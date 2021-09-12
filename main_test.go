@@ -64,6 +64,7 @@ func setupConfigMapReconciler(mgr manager.Manager, log logr.Logger) error {
 			switch {
 			// If the secret doesn't exist, the reconciliation is done.
 			case apierrors.IsNotFound(err):
+				log.Info("secret not found")
 				return reconcile.Result{}, nil
 			case err != nil:
 				return reconcile.Result{}, fmt.Errorf("looking for Secret %s: %w", r.NamespacedName, err)
