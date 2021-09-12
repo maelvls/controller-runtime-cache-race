@@ -1,6 +1,15 @@
-# The metadata vs. concrete clients race
+# The metadata vs. concrete controller-runtime clients race
 
-Issue: https://github.com/jetstack/venafi-oauth-helper/pull/67
+The controller-runtime is a Go client for Kubernetes that re-uses some
+parts of client-go (the official Go client for Kubernetes). Unlike
+client-go, controller-runtime knows how to create "lightweight"
+caches.
+
+We discovered in [controller-runtime#1660](https://github.com/kubernetes-sigs/controller-runtime/issues/1660)
+that users of controller-runtime may unknowningly create multiple
+"projections" (i.e., multiple ways of caching a resource) due to
+the fact that controller-runtime creates caches "on the fly" the
+first time you do a Get or List call.
 
 To reproduce the "race" between two projections (metadata and concrete), I
 created the following `main_test.go` that watches and reconciles Secrets. The
