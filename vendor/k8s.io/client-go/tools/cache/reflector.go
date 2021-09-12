@@ -495,6 +495,9 @@ loop:
 				continue
 			}
 			newResourceVersion := meta.GetResourceVersion()
+
+			klog.V(4).Infof("reflector: event %s (%s -> %s)", event.Type, *resourceVersion, newResourceVersion)
+
 			switch event.Type {
 			case watch.Added:
 				err := r.store.Add(event.Object)
